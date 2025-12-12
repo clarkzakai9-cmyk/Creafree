@@ -1,0 +1,11 @@
+{
+  "name": "red-black-ai-editor-vercel-project",
+  "version": "1.0.0",
+  "description": "A simple drag-and-drop editor with Gemini AI integration.",
+  "scripts": {
+    "start": "echo 'Run the client via Vercel deployment'"
+  },
+  "dependencies": {
+    "@google/genai": "^0.1.0"
+  }
+}
