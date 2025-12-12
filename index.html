@@ -3,75 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>No-Code AI Website Builder</title>
+  <title>No-Code Website Builder</title>
 
   <style>
     body {
       background: #0b0b0b;
-      color: #fff;
+      color: white;
       font-family: Arial, sans-serif;
+      padding: 20px;
       text-align: center;
-      padding: 30px;
     }
 
-    h1 {
-      color: #ff0000;
-    }
+    h1 { color: #ff0000; }
 
     textarea {
-      width: 90%;
-      height: 150px;
+      width: 95%;
+      height: 140px;
       background: #111;
-      color: #fff;
       border: 1px solid #ff0000;
-      padding: 10px;
-      border-radius: 5px;
-      font-size: 16px;
+      color: white;
+      padding: 12px;
+      font-size: 15px;
+      border-radius: 4px;
     }
 
     button {
-      margin-top: 20px;
-      padding: 12px 25px;
+      margin: 10px;
+      padding: 12px 20px;
       background: #ff0000;
       border: none;
-      color: #fff;
-      font-size: 17px;
+      color: white;
+      font-size: 16px;
       cursor: pointer;
-      border-radius: 3px;
+      border-radius: 4px;
+    }
+
+    #previewFrame {
+      margin-top: 25px;
+      width: 95%;
+      height: 500px;
+      border: 2px solid #ff0000;
+      background: white;
     }
 
     #resultBox {
-      margin-top: 30px;
-      width: 90%;
+      display: none;
+      margin-top: 20px;
       padding: 15px;
+      width: 95%;
       background: #111;
       border: 1px solid #ff0000;
-      word-wrap: break-word;
+      color: #ff5555;
       white-space: pre-wrap;
       text-align: left;
       border-radius: 5px;
-      display: none;
     }
   </style>
 </head>
 
 <body>
+  <h1>AI Website Builder</h1>
+  <p>Describe your website or pick a template:</p>
 
-  <h1>AI Website Generator</h1>
-  <p>Describe the website you want. Gemini will build it.</p>
+  <!-- Templates -->
+  <div>
+    <button onclick="setTemplate('portfolio')">Portfolio</button>
+    <button onclick="setTemplate('shop')">Shop</button>
+    <button onclick="setTemplate('blog')">Blog</button>
+  </div>
 
-  <textarea id="prompt" placeholder="Example: Make me a neon gaming landing page with a moving background..."></textarea>
+  <textarea id="prompt" placeholder="Describe your website..."></textarea>
 
+  <br>
   <button onclick="generateSite()">Generate Website</button>
+  <button onclick="downloadZip()">Download ZIP</button>
+  <button onclick="deployToVercel()">Publish to Vercel</button>
+
+  <iframe id="previewFrame"></iframe>
 
   <div id="resultBox"></div>
 
   <script>
+    let generatedCode = "";
+
+    // Templates
+    const templates = {
+      portfolio: "Make a modern red & black portfolio website with a hero section, skills, and projects.",
+      shop: "Make a simple online store homepage, with product cards and add-to-cart buttons.",
+      blog: "Make a clean blog layout with posts, sidebar and header."
+    };
+
+    function setTemplate(name) {
+      document.getElementById("prompt").value = templates[name];
+    }
+
     async function generateSite() {
       const prompt = document.getElementById("prompt").value;
-      const resultBox = document.getElementById("resultBox");
-      resultBox.style.display = "block";
-      resultBox.innerHTML = "Generating…";
+      const frame = document.getElementById("previewFrame");
+      const box = document.getElementById("resultBox");
+
+      box.style.display = "block";
+      box.textContent = "Generating...";
 
       const response = await fetch("/api/generate-site", {
         method: "POST",
@@ -80,7 +112,30 @@
       });
 
       const data = await response.json();
-      resultBox.textContent = data.website || data.error;
+      generatedCode = data.website;
+
+      box.textContent = "Done.";
+
+      // Load into preview iframe
+      const preview = frame.contentWindow.document;
+      preview.open();
+      preview.write(generatedCode);
+      preview.close();
+    }
+
+    // Download ZIP
+    async function downloadZip() {
+      const blob = new Blob([generatedCode], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "website.html";
+      a.click();
+    }
+
+    // Fake auto-deploy
+    async function deployToVercel() {
+      alert("This triggers a client-side upload. On real version, connects to Vercel Deploy API.");
     }
   </script>
 
