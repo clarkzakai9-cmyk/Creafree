@@ -1,11 +1,12 @@
 {
-  "name": "red-black-ai-editor-vercel-project",
+  "name": "creafree-no-code-ai-builder",
   "version": "1.0.0",
-  "description": "A simple drag-and-drop editor with Gemini AI integration.",
+  "description": "A free no-code website generator powered by Gemini.",
+  "type": "module",
   "scripts": {
-    "start": "echo 'Run the client via Vercel deployment'"
+    "start": "echo \"This project runs on Vercel serverless functions.\""
   },
   "dependencies": {
-    "@google/generative-ai": "^0.21.0"
+    "@google/generative-ai": "^0.7.0"
   }
 }
